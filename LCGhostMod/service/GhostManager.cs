@@ -1,4 +1,4 @@
-using Serilog;
+using Dobes.structures;
 
 namespace Dobes
 {
@@ -21,10 +21,15 @@ namespace Dobes
 			m_ghostEventDetector = new PlayerGhostEventDetector(TriggerGhostEvent);
 			m_ghostSfxPlayer = new PlayerGhostSfxPlayer();
 
-			// TODO
-            // LC_API.Networking.Network.RegisterMessage<string>(MESSAGE_ID, true, ReceiveGhostEvent);
+			NetworkHandler.LevelEvent += ReceiveGhostEvent;
+			
             Plugin.Log.LogInfo("GhostManager initialized!");
         }
+
+		private void OnDestroy()
+		{
+			NetworkHandler.LevelEvent -= ReceiveGhostEvent;
+		}
 
 		private void LateUpdate()
 		{
@@ -36,16 +41,29 @@ namespace Dobes
             ulong forPlayerId = forPlayer.actualClientId;
 			Plugin.Log.LogInfo($"Triggered ghost event for {forPlayerId}");
 			
-			// TODO
-            // LC_API.Networking.Network.Broadcast(MESSAGE_ID, forPlayerId.ToString());
+			GhostEventData data = new GhostEventData(forPlayerId);
+			SendGhostEventToClients(data);
         }
-		
-		// private void ReceiveGhostEvent(ulong arg1, string forPlayerId) // sure wish i knew what arg1 was
-		// {
-		// 	Plugin.Log.LogInfo($"Received ghost event for {forPlayerId}");
-		// 	PlayerControllerB localPlayerController = StartOfRound.Instance.localPlayerController;
-		// 	if (localPlayerController.actualClientId == ulong.Parse(forPlayerId)) 
-		// 		m_ghostSfxPlayer.PlaySfx();
-		// }
+
+		static void SendGhostEventToClients(GhostEventData data)
+		{
+			// if (!(NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer))
+			// 	return;
+
+			NetworkHandler.Instance.EventClientRpc(data.ToString());
+		}
+
+		private void ReceiveGhostEvent(string dataString)
+		{
+			if (!GhostEventData.TryParse(dataString, out GhostEventData data))
+			{
+				Plugin.Log.LogError("Failed to parse ghost event data");
+				return;
+			}
+			
+			PlayerControllerB localPlayerController = StartOfRound.Instance.localPlayerController;
+			if (localPlayerController.actualClientId == data.SpectatedUserId) 
+				m_ghostSfxPlayer.PlaySfx();
+		}
 	}
 }

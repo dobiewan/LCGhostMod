@@ -17,8 +17,6 @@ public class Plugin : BaseUnityPlugin
     internal static ManualLogSource Log => Instance.Logger;
 
     private readonly Harmony _harmony = new(PluginInfo.PLUGIN_GUID);
-
-    // public TemplateService Service;
     
     private AssetBundle m_assetBundle = null;
 
@@ -29,8 +27,6 @@ public class Plugin : BaseUnityPlugin
 
     private void Awake()
     {
-        // Service = new TemplateService();
-
         Log.LogInfo($"LCGhostMod is awake!");
         Log.LogInfo($"Applying patches...");
         ApplyPluginPatch();
