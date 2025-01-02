@@ -49,7 +49,7 @@ namespace Dobes
 			if (voicePlayerState == null || !voicePlayerState.IsSpeaking)
 				return;
 
-            // Plugin.Log.LogInfo("amp: " + voicePlayerState.Amplitude);
+            // Plugin.Log.LogInfo("local mic amplitude: " + voicePlayerState.Amplitude);
 
 			if (voicePlayerState.Amplitude < MIN_AMPLITUDE_FOR_SFX)
 				return;

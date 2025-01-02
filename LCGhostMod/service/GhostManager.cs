@@ -1,3 +1,5 @@
+using Serilog;
+
 namespace Dobes
 {
 	using GameNetcodeStuff;
@@ -21,6 +23,7 @@ namespace Dobes
 
 			// TODO
             // LC_API.Networking.Network.RegisterMessage<string>(MESSAGE_ID, true, ReceiveGhostEvent);
+            Plugin.Log.LogInfo("GhostManager initialized!");
         }
 
 		private void LateUpdate()
@@ -37,12 +40,12 @@ namespace Dobes
             // LC_API.Networking.Network.Broadcast(MESSAGE_ID, forPlayerId.ToString());
         }
 		
-		private void ReceiveGhostEvent(ulong arg1, string forPlayerId) // sure wish i knew what arg1 was
-		{
-			Plugin.Log.LogInfo($"Received ghost event for {forPlayerId}");
-			PlayerControllerB localPlayerController = StartOfRound.Instance.localPlayerController;
-			if (localPlayerController.actualClientId == ulong.Parse(forPlayerId)) 
-				m_ghostSfxPlayer.PlaySfx();
-		}
+		// private void ReceiveGhostEvent(ulong arg1, string forPlayerId) // sure wish i knew what arg1 was
+		// {
+		// 	Plugin.Log.LogInfo($"Received ghost event for {forPlayerId}");
+		// 	PlayerControllerB localPlayerController = StartOfRound.Instance.localPlayerController;
+		// 	if (localPlayerController.actualClientId == ulong.Parse(forPlayerId)) 
+		// 		m_ghostSfxPlayer.PlaySfx();
+		// }
 	}
 }

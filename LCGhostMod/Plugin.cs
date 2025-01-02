@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Reflection;
 using BepInEx;
 using BepInEx.Logging;
@@ -35,6 +36,7 @@ public class Plugin : BaseUnityPlugin
         ApplyPluginPatch();
         Log.LogInfo($"Patches applied");
 
+        InitNetcodePatcher();
         TryLoadAssetBundle();
     }
 
@@ -45,7 +47,24 @@ public class Plugin : BaseUnityPlugin
     {
         _harmony.PatchAll(typeof(RoundManagerPatch));
     }
-    
+
+    private void InitNetcodePatcher()
+    {
+        Type[] types = Assembly.GetExecutingAssembly().GetTypes();
+        foreach (Type type in types)
+        {
+            MethodInfo[] methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+            foreach (MethodInfo method in methods)
+            {
+                object[] attributes = method.GetCustomAttributes(typeof(RuntimeInitializeOnLoadMethodAttribute), false);
+                if (attributes.Length > 0)
+                {
+                    method.Invoke(null, null);
+                }
+            }
+        }
+    }
+
     private void TryLoadAssetBundle()
     {
         string sAssemblyLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -55,13 +74,13 @@ public class Plugin : BaseUnityPlugin
             return;
         }
 
-        m_assetBundle = AssetBundle.LoadFromFile(Path.Combine(sAssemblyLocation, "lcghostmod"));
+        m_assetBundle = AssetBundle.LoadFromFile(Path.Combine(sAssemblyLocation, "lcghostmodassets"));
         if (m_assetBundle == null) 
         {
             Log.LogError("Failed to load custom assets.");
             return;
         }
 
-        Log.LogInfo("LCGhostModMain successfully initialized!");
+        Log.LogInfo("LCGhostMod bundle loaded!");
     }
 }

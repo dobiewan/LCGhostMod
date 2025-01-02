@@ -36,6 +36,10 @@
       </Reference>
     </ItemGroup>
 
+    <ItemGroup>
+        <PackageReference Include="Evaisa.NetcodePatcher" Version="3.*" />
+    </ItemGroup>
+
     <!-- https://github.com/EvaisaDev/UnityNetcodePatcher#usage-as-a-post-build-event -->
     <!-- Syntax to use the tool installed globally -->
     <!-- Allows to patch elements like networked behaviours, RPCs, etc. -->
