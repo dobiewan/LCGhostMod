@@ -51,6 +51,7 @@ namespace Dobes
 
             // Plugin.Log.LogInfo("local mic amplitude: " + voicePlayerState.Amplitude);
 
+            // TODO DOBIE: make the min amp configurable by user
 			if (voicePlayerState.Amplitude < MIN_AMPLITUDE_FOR_SFX)
 				return;
             
