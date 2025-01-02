@@ -9,9 +9,11 @@ using UnityEngine;
 namespace Dobes;
 
 [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
+[BepInDependency("LethalNetworkAPI")]
+[BepInDependency("OdinSerializer")]
 public class Plugin : BaseUnityPlugin
 {
-    internal static Plugin Instance { get; set; }
+    internal static Plugin Instance { get; private set; }
     internal AssetBundle AssetBundle => m_assetBundle;
 
     internal static ManualLogSource Log => Instance.Logger;

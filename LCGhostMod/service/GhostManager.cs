@@ -1,4 +1,5 @@
 using Dobes.structures;
+using LethalNetworkAPI;
 
 namespace Dobes
 {
@@ -19,14 +20,14 @@ namespace Dobes
 			m_ghostEventDetector = new PlayerGhostEventDetector(TriggerGhostEvent);
 			m_ghostSfxPlayer = new PlayerGhostSfxPlayer();
 
-			NetworkHandler.LevelEvent += ReceiveGhostEvent;
+			LethalNetworkMessages.s_ghostEventMessage.OnReceived += ReceiveGhostEvent;
 			
             Plugin.Log.LogInfo("GhostManager initialized!");
         }
 
 		private void OnDestroy()
 		{
-			NetworkHandler.LevelEvent -= ReceiveGhostEvent;
+			LethalNetworkMessages.s_ghostEventMessage.OnReceived -= ReceiveGhostEvent;
 		}
 
 		private void LateUpdate()
@@ -45,22 +46,12 @@ namespace Dobes
 
 		static void SendGhostEventToClients(GhostEventData data)
 		{
-			// if (!(NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer))
-			// 	return;
-
-			NetworkHandler.Instance.EventClientRpc(data.ToString());
+			LethalClientMessage<GhostEventData> message = new LethalClientMessage<GhostEventData>(identifier: "GhostEvent");
+			message.SendAllClients(data, false);
 		}
 
-		private void ReceiveGhostEvent(string dataString)
+		private void ReceiveGhostEvent(GhostEventData data)
 		{
-			Plugin.Log.LogInfo("Received ghost event!");
-			
-			if (!GhostEventData.TryParse(dataString, out GhostEventData data))
-			{
-				Plugin.Log.LogError("Failed to parse ghost event data");
-				return;
-			}
-
 			PlayerControllerB localPlayerController = StartOfRound.Instance.localPlayerController;
 			Plugin.Log.LogInfo($"Ghost event received for user {data.SpectatedUserId}. This user is {localPlayerController.actualClientId}");
 
