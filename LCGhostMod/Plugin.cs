@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Reflection;
 using BepInEx;
 using BepInEx.Logging;
@@ -10,7 +9,7 @@ namespace Dobes;
 
 [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
 [BepInDependency("LethalNetworkAPI")]
-[BepInDependency("OdinSerializer")]
+// [BepInDependency("OdinSerializer")]
 public class Plugin : BaseUnityPlugin
 {
     internal static Plugin Instance { get; private set; }
@@ -34,7 +33,6 @@ public class Plugin : BaseUnityPlugin
         ApplyPluginPatch();
         Log.LogInfo($"Patches applied");
 
-        InitNetcodePatcher();
         TryLoadAssetBundle();
     }
 
@@ -44,24 +42,6 @@ public class Plugin : BaseUnityPlugin
     private void ApplyPluginPatch()
     {
         _harmony.PatchAll(typeof(RoundManagerPatch));
-        _harmony.PatchAll(typeof(NetworkObjectManager));
-    }
-
-    private void InitNetcodePatcher()
-    {
-        Type[] types = Assembly.GetExecutingAssembly().GetTypes();
-        foreach (Type type in types)
-        {
-            MethodInfo[] methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
-            foreach (MethodInfo method in methods)
-            {
-                object[] attributes = method.GetCustomAttributes(typeof(RuntimeInitializeOnLoadMethodAttribute), false);
-                if (attributes.Length > 0)
-                {
-                    method.Invoke(null, null);
-                }
-            }
-        }
     }
 
     private void TryLoadAssetBundle()
