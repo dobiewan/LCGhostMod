@@ -42,6 +42,7 @@ public class Plugin : BaseUnityPlugin
     private void ApplyPluginPatch()
     {
         _harmony.PatchAll(typeof(RoundManagerPatch));
+        _harmony.PatchAll(typeof(NetworkObjectManager));
     }
 
     private void InitNetcodePatcher()

@@ -11,8 +11,6 @@ namespace Dobes
     /// <author>Sarah Dobie</author>
 	internal class GhostManager : MonoBehaviour
 	{
-		// private const string MESSAGE_ID = "GhostMessage";
-
 		private PlayerGhostEventDetector m_ghostEventDetector = null;
 		private PlayerGhostSfxPlayer m_ghostSfxPlayer = null;
 
@@ -55,13 +53,17 @@ namespace Dobes
 
 		private void ReceiveGhostEvent(string dataString)
 		{
+			Plugin.Log.LogInfo("Received ghost event!");
+			
 			if (!GhostEventData.TryParse(dataString, out GhostEventData data))
 			{
 				Plugin.Log.LogError("Failed to parse ghost event data");
 				return;
 			}
-			
+
 			PlayerControllerB localPlayerController = StartOfRound.Instance.localPlayerController;
+			Plugin.Log.LogInfo($"Ghost event received for user {data.SpectatedUserId}. This user is {localPlayerController.actualClientId}");
+
 			if (localPlayerController.actualClientId == data.SpectatedUserId) 
 				m_ghostSfxPlayer.PlaySfx();
 		}
