@@ -1,5 +1,4 @@
 using Dobes.structures;
-using LethalNetworkAPI;
 
 namespace Dobes
 {
@@ -21,6 +20,7 @@ namespace Dobes
 			m_ghostSfxPlayer = new PlayerGhostSfxPlayer();
 
 			LethalNetworkMessages.s_ghostEventMessage.OnReceived += ReceiveGhostEvent;
+			LethalNetworkMessages.s_testEventMessage.OnReceived += ReceiveTestEvent;
 			
             Plugin.Log.LogInfo("GhostManager initialized!");
         }
@@ -28,11 +28,26 @@ namespace Dobes
 		private void OnDestroy()
 		{
 			LethalNetworkMessages.s_ghostEventMessage.OnReceived -= ReceiveGhostEvent;
+			LethalNetworkMessages.s_testEventMessage.OnReceived -= ReceiveTestEvent;
+		}
+
+		private void Update()
+		{
+			if (StartOfRound.Instance.localPlayerController.isCrouching)
+			{
+				Plugin.Log.LogInfo("Sending test event");
+				LethalNetworkMessages.s_testEventMessage.SendAllClients("hello!");
+			}
 		}
 
 		private void LateUpdate()
 		{
 			m_ghostEventDetector.Simulate();
+		}
+
+		private void ReceiveTestEvent(string obj)
+		{
+			Plugin.Log.LogInfo("Received test event: " + obj);
 		}
 
 		private void TriggerGhostEvent(PlayerControllerB forPlayer)
@@ -41,14 +56,8 @@ namespace Dobes
 			Plugin.Log.LogInfo($"Triggered ghost event for {forPlayerId}");
 			
 			GhostEventData data = new GhostEventData(forPlayerId);
-			SendGhostEventToClients(data);
+			LethalNetworkMessages.s_ghostEventMessage.SendAllClients(data, false);
         }
-
-		static void SendGhostEventToClients(GhostEventData data)
-		{
-			LethalClientMessage<GhostEventData> message = new LethalClientMessage<GhostEventData>(identifier: "GhostEvent");
-			message.SendAllClients(data, false);
-		}
 
 		private void ReceiveGhostEvent(GhostEventData data)
 		{
