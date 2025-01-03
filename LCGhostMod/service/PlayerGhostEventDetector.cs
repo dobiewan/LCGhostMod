@@ -1,6 +1,7 @@
 namespace DobieWan;
 
 using System;
+using config;
 using Dissonance;
 using GameNetcodeStuff;
 using UnityEngine;
@@ -8,17 +9,15 @@ using Random = UnityEngine.Random;
 
 internal class PlayerGhostEventDetector
 {
-	// TODO DOBIE: put this stuff in a conf file
-	private const float COOLDOWN_MIN = 2f;
-	private const float COOLDOWN_MAX = 5f;
-	private const float MIN_AMPLITUDE_FOR_SFX = 0.4f;
-
+	private readonly EventConfigs m_configs = null;
 	private readonly Action<PlayerControllerB> m_hauntVictimEventAction = null;
+
 	private float m_lastGhostNoiseTime = 0f;
 	private float m_cooldownTime = 0f;
 
 	internal PlayerGhostEventDetector(Action<PlayerControllerB> hauntVictimEventAction)
 	{
+		m_configs = Plugin.Instance.EventConfigs;
 		m_hauntVictimEventAction = hauntVictimEventAction;
 		m_cooldownTime = GetRandomCooldownTime();
 	}
@@ -48,7 +47,7 @@ internal class PlayerGhostEventDetector
 		// Plugin.Log.LogInfo("local mic amplitude: " + voicePlayerState.Amplitude);
 
 		// TODO DOBIE: make the min amp configurable by user
-		if (voicePlayerState.Amplitude < MIN_AMPLITUDE_FOR_SFX)
+		if (voicePlayerState.Amplitude < m_configs.MinMicAmpToTriggerGhost.Value)
 			return;
 
 		TriggerGhostEvent(localPlayer.spectatedPlayerScript);
@@ -61,8 +60,10 @@ internal class PlayerGhostEventDetector
 		m_hauntVictimEventAction?.Invoke(toPlayer);
 	}
 
-	private static float GetRandomCooldownTime()
+	private float GetRandomCooldownTime()
 	{
-		return COOLDOWN_MIN + Random.value * (COOLDOWN_MAX - COOLDOWN_MIN);
+		float minCooldownTime = m_configs.EventTriggerCooldownMin.Value;
+		float maxCooldownTime = m_configs.EventTriggerCooldownMax.Value;
+		return minCooldownTime + Random.value * (maxCooldownTime - minCooldownTime);
 	}
 }

@@ -1,18 +1,20 @@
 namespace DobieWan;
 
+using config;
 using UnityEngine;
 
 internal class PlayerGhostSfxPlayer
 {
-	private const float RANDOMIZE_PITCH_RANGE = 0.1f;
-	private const float RANDOMIZE_VOLUME_RANGE = 0.2f;
-
+	private readonly SfxPlayerConfigs m_configs = null;
 	private readonly AudioSource m_audioSource = null;
 	private readonly AudioClip[] m_ghostSfx = null;
+	
 	private int m_ghostSfxIndex = 0;
 
 	internal PlayerGhostSfxPlayer()
 	{
+		m_configs = Plugin.Instance.SfxPlayerConfigs;
+		
 		AssetBundle bundle = Plugin.Instance.AssetBundle;
 		if (bundle == null)
 			return;
@@ -49,7 +51,7 @@ internal class PlayerGhostSfxPlayer
 
 		// TODO: set volume according to the amplitude of the voice input?
 		AudioClip nextAudioClip = GetNextAudioClip();
-		Utility.PlayAudioClipLocalOnly(m_audioSource, nextAudioClip, RANDOMIZE_PITCH_RANGE, RANDOMIZE_VOLUME_RANGE);
+		Utility.PlayAudioClipLocalOnly(m_audioSource, nextAudioClip, m_configs.RandomizePitchRange.Value, m_configs.RandomizeVolumeRange.Value);
 		return nextAudioClip.name;
 	}
 
@@ -87,7 +89,7 @@ internal class PlayerGhostSfxPlayer
 			audioClip = m_ghostSfx[Random.Range(0, m_ghostSfx.Length)];
 		}
 
-		Utility.PlayAudioClipLocalOnly(m_audioSource, audioClip, RANDOMIZE_PITCH_RANGE, RANDOMIZE_VOLUME_RANGE);
+		Utility.PlayAudioClipLocalOnly(m_audioSource, audioClip, m_configs.RandomizePitchRange.Value, m_configs.RandomizeVolumeRange.Value);
 	}
 
 	private bool TryGetAudioClipByName(string clipName, out AudioClip audioClip)
