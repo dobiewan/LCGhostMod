@@ -2,10 +2,10 @@
 
 internal struct VictimHauntedEventData
 {
-    internal string ClipName { get; private set; }
+	internal string ClipName { get; private set; }
 
-    internal VictimHauntedEventData(string clipName)
-    {
-        ClipName = clipName;
-    }
+	internal VictimHauntedEventData(string clipName)
+	{
+		ClipName = clipName;
+	}
 }
