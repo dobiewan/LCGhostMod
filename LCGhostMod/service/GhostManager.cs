@@ -1,6 +1,6 @@
 using LethalNetworkAPI;
 
-namespace Dobes;
+namespace DobieWan;
 
 using GameNetcodeStuff;
 using UnityEngine;

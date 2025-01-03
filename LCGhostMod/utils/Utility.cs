@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-namespace Dobes;
+namespace DobieWan;
 
 internal static class Utility
 {

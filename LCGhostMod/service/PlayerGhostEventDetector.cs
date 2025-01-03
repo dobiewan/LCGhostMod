@@ -1,4 +1,4 @@
-namespace Dobes;
+namespace DobieWan;
 
 using System;
 using Dissonance;
