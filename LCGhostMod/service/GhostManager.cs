@@ -53,7 +53,7 @@ internal class GhostManager : MonoBehaviour
 
 	private void TriggerVictimHauntedEvent(string audioClipName)
 	{
-		Plugin.Log.LogInfo($"Triggered victim haunted event");
+		Plugin.Log.LogInfo($"Triggered victim haunted event with clip {audioClipName}");
 
 		VictimHauntedEventData data = new VictimHauntedEventData(audioClipName);
 		m_victimHauntedEvent.SendAllClients(data);
@@ -62,7 +62,7 @@ internal class GhostManager : MonoBehaviour
 	private void ReceiveVictimHauntedEvent(VictimHauntedEventData data, ulong fromUser)
 	{
 		PlayerControllerB localPlayerController = StartOfRound.Instance.localPlayerController;
-		Plugin.Log.LogInfo($"Victim haunted received for user {fromUser}. The spectated user is {localPlayerController.actualClientId}");
+		Plugin.Log.LogInfo($"Victim haunted received from user {fromUser}. The spectated user is {localPlayerController.actualClientId}");
 
 		if (localPlayerController.spectatedPlayerScript == null)
 			return;
@@ -70,7 +70,7 @@ internal class GhostManager : MonoBehaviour
 		ulong specatedUserId = localPlayerController.spectatedPlayerScript.actualClientId;
 		if (specatedUserId == fromUser)
 		{
-			Plugin.Log.LogInfo("Victim haunted: Playing clip " + data.ClipName);
+			Plugin.Log.LogInfo("Victim haunted: Playing clip: " + data.ClipName);
 			m_ghostSfxPlayer.PlaySpectatorSfx(data.ClipName);
 		}
 	}

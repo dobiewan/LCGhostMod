@@ -1,9 +1,19 @@
 ﻿namespace Dobes;
 
+using System;
+using UnityEngine;
+
+[Serializable]
 internal struct HauntVictimEventData
 {
-	internal ulong SpectatedUserId { get; private set; }
-	// TODO more stuff here
+	[SerializeField]
+	private ulong m_spectatedUserId;
+
+	internal ulong SpectatedUserId
+	{
+		readonly get => m_spectatedUserId;
+		private set => m_spectatedUserId = value;
+	}
 
 	internal HauntVictimEventData(ulong mSpectatedUserId)
 	{
