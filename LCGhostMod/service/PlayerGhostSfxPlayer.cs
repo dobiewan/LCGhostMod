@@ -41,8 +41,7 @@ internal class PlayerGhostSfxPlayer
 		Plugin.Log.LogInfo("PlayerGhostSfxPlayer successfully initialized!");
 	}
   
-	// TODO : group clips by voice so each player keeps a consistent voice
-	// TODO : should the sender also hear the sfx?
+	// TODO : group clips by voice so each player keeps a consistent voice?
 	internal string PlaySfx()
 	{
 		if (m_ghostSfx == null || m_ghostSfx.Length == 0 || m_audioSource == null)
