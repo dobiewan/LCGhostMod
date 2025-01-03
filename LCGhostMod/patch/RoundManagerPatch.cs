@@ -3,10 +3,6 @@ namespace Dobes
     using HarmonyLib;
     using UnityEngine;
 
-    /// <summary>
-    /// 	
-    /// </summary>
-    /// <author>Sarah Dobie</author>
 	[HarmonyPatch(typeof(RoundManager))]
 	internal class RoundManagerPatch
 	{
@@ -16,7 +12,7 @@ namespace Dobes
 		{
 			GameObject systemsParent = GameObject.Find("Systems");
 			
-			GameObject ghostManagerGo = new GameObject("GhostManager", typeof(GhostManager));
+			GameObject ghostManagerGo = new GameObject("GhostManager", typeof(EventManager));
 			ghostManagerGo.transform.SetParent(systemsParent.transform);
         }
     }

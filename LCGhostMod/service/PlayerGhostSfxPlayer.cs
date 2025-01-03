@@ -2,10 +2,6 @@ namespace Dobes
 {
 	using UnityEngine;
 
-	/// <summary>
-	/// 	
-	/// </summary>
-	/// <author>Sarah Dobie</author>
 	internal class PlayerGhostSfxPlayer
 	{
 		private readonly AudioSource m_audioSource = null;

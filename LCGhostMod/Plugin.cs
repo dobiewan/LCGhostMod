@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Reflection;
 using BepInEx;
 using BepInEx.Logging;
@@ -9,16 +8,15 @@ using UnityEngine;
 namespace Dobes;
 
 [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
+[BepInDependency("LethalNetworkAPI")]
 public class Plugin : BaseUnityPlugin
 {
-    internal static Plugin Instance { get; set; }
-    internal AssetBundle AssetBundle => m_assetBundle;
-
+    internal static Plugin Instance { get; private set; }
     internal static ManualLogSource Log => Instance.Logger;
-
-    private readonly Harmony _harmony = new(PluginInfo.PLUGIN_GUID);
     
-    private AssetBundle m_assetBundle = null;
+    internal AssetBundle AssetBundle { get; private set; }
+    
+    private readonly Harmony _harmony = new(PluginInfo.PLUGIN_GUID);
 
     public Plugin()
     {
@@ -32,7 +30,6 @@ public class Plugin : BaseUnityPlugin
         ApplyPluginPatch();
         Log.LogInfo($"Patches applied");
 
-        InitNetcodePatcher();
         TryLoadAssetBundle();
     }
 
@@ -42,24 +39,6 @@ public class Plugin : BaseUnityPlugin
     private void ApplyPluginPatch()
     {
         _harmony.PatchAll(typeof(RoundManagerPatch));
-        _harmony.PatchAll(typeof(NetworkObjectManager));
-    }
-
-    private void InitNetcodePatcher()
-    {
-        Type[] types = Assembly.GetExecutingAssembly().GetTypes();
-        foreach (Type type in types)
-        {
-            MethodInfo[] methods = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
-            foreach (MethodInfo method in methods)
-            {
-                object[] attributes = method.GetCustomAttributes(typeof(RuntimeInitializeOnLoadMethodAttribute), false);
-                if (attributes.Length > 0)
-                {
-                    method.Invoke(null, null);
-                }
-            }
-        }
     }
 
     private void TryLoadAssetBundle()
@@ -71,8 +50,8 @@ public class Plugin : BaseUnityPlugin
             return;
         }
 
-        m_assetBundle = AssetBundle.LoadFromFile(Path.Combine(sAssemblyLocation, "lcghostmodassets"));
-        if (m_assetBundle == null) 
+        AssetBundle = AssetBundle.LoadFromFile(Path.Combine(sAssemblyLocation, "lcghostmodassets"));
+        if (AssetBundle == null) 
         {
             Log.LogError("Failed to load custom assets.");
             return;

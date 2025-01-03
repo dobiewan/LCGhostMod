@@ -1,16 +1,14 @@
-using Dobes.structures;
+using LethalNetworkAPI;
 
 namespace Dobes
 {
 	using GameNetcodeStuff;
     using UnityEngine;
 
-    /// <summary>
-    /// 	
-    /// </summary>
-    /// <author>Sarah Dobie</author>
-	internal class GhostManager : MonoBehaviour
+	internal class EventManager : MonoBehaviour
 	{
+		private LethalClientMessage<GhostEventData> m_ghostEventMessage = null;
+		
 		private PlayerGhostEventDetector m_ghostEventDetector = null;
 		private PlayerGhostSfxPlayer m_ghostSfxPlayer = null;
 
@@ -18,16 +16,11 @@ namespace Dobes
 		{
 			m_ghostEventDetector = new PlayerGhostEventDetector(TriggerGhostEvent);
 			m_ghostSfxPlayer = new PlayerGhostSfxPlayer();
-
-			NetworkHandler.LevelEvent += ReceiveGhostEvent;
+			
+			m_ghostEventMessage = new LethalClientMessage<GhostEventData>("GhostEvent", onReceivedFromClient: ReceiveGhostEvent);
 			
             Plugin.Log.LogInfo("GhostManager initialized!");
         }
-
-		private void OnDestroy()
-		{
-			NetworkHandler.LevelEvent -= ReceiveGhostEvent;
-		}
 
 		private void LateUpdate()
 		{
@@ -40,27 +33,11 @@ namespace Dobes
 			Plugin.Log.LogInfo($"Triggered ghost event for {forPlayerId}");
 			
 			GhostEventData data = new GhostEventData(forPlayerId);
-			SendGhostEventToClients(data);
+			m_ghostEventMessage.SendAllClients(data, false);
         }
 
-		static void SendGhostEventToClients(GhostEventData data)
+		private void ReceiveGhostEvent(GhostEventData data, ulong fromUser)
 		{
-			// if (!(NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer))
-			// 	return;
-
-			NetworkHandler.Instance.EventClientRpc(data.ToString());
-		}
-
-		private void ReceiveGhostEvent(string dataString)
-		{
-			Plugin.Log.LogInfo("Received ghost event!");
-			
-			if (!GhostEventData.TryParse(dataString, out GhostEventData data))
-			{
-				Plugin.Log.LogError("Failed to parse ghost event data");
-				return;
-			}
-
 			PlayerControllerB localPlayerController = StartOfRound.Instance.localPlayerController;
 			Plugin.Log.LogInfo($"Ghost event received for user {data.SpectatedUserId}. This user is {localPlayerController.actualClientId}");
 
