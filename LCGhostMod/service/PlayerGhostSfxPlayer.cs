@@ -24,7 +24,6 @@ internal class PlayerGhostSfxPlayer
 		m_ghostSfx.Shuffle();
 		Plugin.Log.LogInfo($"Loaded {m_ghostSfx?.Length ?? 0} audio clips");
 
-
 		// Try find audio source
 		GameObject sfxParent = GameObject.Find("Systems/Audios/SFX");
 		if (sfxParent == null)
