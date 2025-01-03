@@ -35,6 +35,8 @@ namespace Dobes
 
         }
 
+		// TODO : group clips by voice so each player keeps a consistent voice
+		// TODO : should the sender also hear the sfx?
 		internal void PlaySfx()
 		{
 			if (m_ghostSfx == null || m_audioSource == null)
