@@ -45,8 +45,9 @@ internal class GhostManager : MonoBehaviour
 
 		if (localPlayerController.actualClientId == data.SpectatedUserId)
 		{
-			string audioClip = m_ghostSfxPlayer.PlaySfx();
-			TriggerVictimHauntedEvent(audioClip);
+			string clipName = m_ghostSfxPlayer.PlaySfx();
+			Plugin.Log.LogInfo("Haunt victim: Playing clip " + clipName);
+			TriggerVictimHauntedEvent(clipName);
 		}
 	}
 
@@ -63,8 +64,14 @@ internal class GhostManager : MonoBehaviour
 		PlayerControllerB localPlayerController = StartOfRound.Instance.localPlayerController;
 		Plugin.Log.LogInfo($"Victim haunted received for user {fromUser}. The spectated user is {localPlayerController.actualClientId}");
 
+		if (localPlayerController.spectatedPlayerScript == null)
+			return;
+		
 		ulong specatedUserId = localPlayerController.spectatedPlayerScript.actualClientId;
 		if (specatedUserId == fromUser)
+		{
+			Plugin.Log.LogInfo("Victim haunted: Playing clip " + data.ClipName);
 			m_ghostSfxPlayer.PlaySpectatorSfx(data.ClipName);
+		}
 	}
 }
