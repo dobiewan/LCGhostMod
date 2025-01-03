@@ -32,9 +32,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="DissonanceVoip">
-        <HintPath>..\Dependencies\DissonanceVoip.dll</HintPath>
-      </Reference>
+        <Reference Include="DissonanceVoip">
+            <HintPath>..\Dependencies\DissonanceVoip.dll</HintPath>
+        </Reference>
     </ItemGroup>
 
     <!-- Avoid that the game's assemblies are copied to the plugin's target directory -->
