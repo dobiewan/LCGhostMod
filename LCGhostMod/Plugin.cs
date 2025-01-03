@@ -9,17 +9,14 @@ namespace Dobes;
 
 [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
 [BepInDependency("LethalNetworkAPI")]
-// [BepInDependency("OdinSerializer")]
 public class Plugin : BaseUnityPlugin
 {
     internal static Plugin Instance { get; private set; }
-    internal AssetBundle AssetBundle => m_assetBundle;
-
     internal static ManualLogSource Log => Instance.Logger;
-
-    private readonly Harmony _harmony = new(PluginInfo.PLUGIN_GUID);
     
-    private AssetBundle m_assetBundle = null;
+    internal AssetBundle AssetBundle { get; private set; }
+    
+    private readonly Harmony _harmony = new(PluginInfo.PLUGIN_GUID);
 
     public Plugin()
     {
@@ -53,8 +50,8 @@ public class Plugin : BaseUnityPlugin
             return;
         }
 
-        m_assetBundle = AssetBundle.LoadFromFile(Path.Combine(sAssemblyLocation, "lcghostmodassets"));
-        if (m_assetBundle == null) 
+        AssetBundle = AssetBundle.LoadFromFile(Path.Combine(sAssemblyLocation, "lcghostmodassets"));
+        if (AssetBundle == null) 
         {
             Log.LogError("Failed to load custom assets.");
             return;

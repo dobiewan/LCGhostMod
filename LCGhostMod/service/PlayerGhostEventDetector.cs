@@ -6,10 +6,6 @@ namespace Dobes
 	using UnityEngine;
 	using Random = UnityEngine.Random;
 
-	/// <summary>
-	/// 	
-	/// </summary>
-	/// <author>Sarah Dobie</author>
 	internal class PlayerGhostEventDetector
 	{
 		// TODO DOBIE: put this stuff in a conf file

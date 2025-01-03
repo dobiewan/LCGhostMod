@@ -1,4 +1,4 @@
-﻿namespace Dobes.structures;
+﻿namespace Dobes;
 
 internal struct GhostEventData
 {

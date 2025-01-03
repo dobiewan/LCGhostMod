@@ -1,4 +1,3 @@
-using Dobes.structures;
 using LethalNetworkAPI;
 
 namespace Dobes
@@ -6,11 +5,7 @@ namespace Dobes
 	using GameNetcodeStuff;
     using UnityEngine;
 
-    /// <summary>
-    /// 	
-    /// </summary>
-    /// <author>Sarah Dobie</author>
-	internal class GhostManager : MonoBehaviour
+	internal class EventManager : MonoBehaviour
 	{
 		private LethalClientMessage<GhostEventData> m_ghostEventMessage = null;
 		
