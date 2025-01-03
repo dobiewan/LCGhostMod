@@ -13,13 +13,13 @@ namespace Dobes
 		private const float COOLDOWN_MAX = 5f;
 		private const float MIN_AMPLITUDE_FOR_SFX = 0.4f;
 		
-		private readonly Action<PlayerControllerB> m_doGhostEventAction = null;
+		private readonly Action<PlayerControllerB> m_hauntVictimEventAction = null;
 		private float m_lastGhostNoiseTime = 0f;
 		private float m_cooldownTime = 0f;
 
-		internal PlayerGhostEventDetector(Action<PlayerControllerB> doGhostEventAction)
+		internal PlayerGhostEventDetector(Action<PlayerControllerB> hauntVictimEventAction)
 		{
-			m_doGhostEventAction = doGhostEventAction;
+			m_hauntVictimEventAction = hauntVictimEventAction;
 			m_cooldownTime = GetRandomCooldownTime();
 		}
 
@@ -58,7 +58,7 @@ namespace Dobes
 		{
 			m_lastGhostNoiseTime = Time.time;
 			m_cooldownTime = GetRandomCooldownTime();
-			m_doGhostEventAction?.Invoke(toPlayer);
+			m_hauntVictimEventAction?.Invoke(toPlayer);
 		}
 
 		private static float GetRandomCooldownTime()

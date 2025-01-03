@@ -40,15 +40,17 @@ namespace Dobes
 			Plugin.Log.LogInfo("PlayerGhostSfxPlayer successfully initialized!");
         }
 
-		internal void PlaySfx()
+		internal string PlaySfx()
 		{
 			if (m_ghostSfx == null || m_ghostSfx.Length == 0 || m_audioSource == null)
-				return;
+				return null;
 			
 			Plugin.Log.LogInfo("ooOOOOOOOoooooOOOoo");
 			
 			// TODO: set volume according to the amplitude of the voice input?
-			Utility.PlayAudioClipLocalOnly(m_audioSource, GetNextAudioClip(), RANDOMIZE_PITCH_RANGE, RANDOMIZE_VOLUME_RANGE);
+			AudioClip nextAudioClip = GetNextAudioClip();
+			Utility.PlayAudioClipLocalOnly(m_audioSource, nextAudioClip, RANDOMIZE_PITCH_RANGE, RANDOMIZE_VOLUME_RANGE);
+			return nextAudioClip.name;
 		}
 
 		internal AudioClip GetNextAudioClip()
@@ -75,6 +77,33 @@ namespace Dobes
 				m_ghostSfx[0] = m_ghostSfx[^1];
 				m_ghostSfx[^1] = firstClip;
 			}
+		}
+
+		internal void PlaySpectatorSfx(string clipName)
+		{
+			if (!TryGetAudioClipByName(clipName, out AudioClip audioClip))
+			{
+				// Fall back to a random clip
+				audioClip = m_ghostSfx[Random.Range(0, m_ghostSfx.Length)];
+			}
+			
+			Utility.PlayAudioClipLocalOnly(m_audioSource, audioClip, RANDOMIZE_PITCH_RANGE, RANDOMIZE_VOLUME_RANGE);
+		}
+
+		private bool TryGetAudioClipByName(string clipName, out AudioClip audioClip)
+		{
+			for (int i = 0; i < m_ghostSfx.Length; i++)
+			{
+				AudioClip clip = m_ghostSfx[i];
+				if (clip != null && clip.name == clipName)
+				{
+					audioClip = clip;
+					return true;
+				}
+			}
+			
+			audioClip = null;
+			return false;
 		}
 	}
 }

@@ -1,11 +1,11 @@
 ﻿namespace Dobes;
 
-internal struct GhostEventData
+internal struct HauntVictimEventData
 {
     internal ulong SpectatedUserId { get; private set; }
     // TODO more stuff here
 
-    internal GhostEventData(ulong mSpectatedUserId)
+    internal HauntVictimEventData(ulong mSpectatedUserId)
     {
         SpectatedUserId = mSpectatedUserId;
     }

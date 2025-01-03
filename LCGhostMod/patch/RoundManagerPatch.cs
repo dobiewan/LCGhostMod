@@ -12,7 +12,7 @@ namespace Dobes
 		{
 			GameObject systemsParent = GameObject.Find("Systems");
 			
-			GameObject ghostManagerGo = new GameObject("GhostManager", typeof(EventManager));
+			GameObject ghostManagerGo = new GameObject("GhostManager", typeof(GhostManager));
 			ghostManagerGo.transform.SetParent(systemsParent.transform);
         }
     }
