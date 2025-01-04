@@ -1,18 +1,20 @@
 namespace DobieWan;
 
+using config;
 using UnityEngine;
 
 internal class PlayerGhostSfxPlayer
 {
-	private const float RANDOMIZE_PITCH_RANGE = 0.1f;
-	private const float RANDOMIZE_VOLUME_RANGE = 0.2f;
-
+	private readonly SfxPlayerConfigs m_configs = null;
 	private readonly AudioSource m_audioSource = null;
 	private readonly AudioClip[] m_ghostSfx = null;
+	
 	private int m_ghostSfxIndex = 0;
 
 	internal PlayerGhostSfxPlayer()
 	{
+		m_configs = Plugin.Instance.SfxPlayerConfigs;
+		
 		AssetBundle bundle = Plugin.Instance.AssetBundle;
 		if (bundle == null)
 			return;
@@ -21,7 +23,6 @@ internal class PlayerGhostSfxPlayer
 		m_ghostSfx = bundle.LoadAllAssets<AudioClip>();
 		m_ghostSfx.Shuffle();
 		Plugin.Log.LogInfo($"Loaded {m_ghostSfx?.Length ?? 0} audio clips");
-
 
 		// Try find audio source
 		GameObject sfxParent = GameObject.Find("Systems/Audios/SFX");
@@ -40,8 +41,7 @@ internal class PlayerGhostSfxPlayer
 		Plugin.Log.LogInfo("PlayerGhostSfxPlayer successfully initialized!");
 	}
   
-	// TODO : group clips by voice so each player keeps a consistent voice
-	// TODO : should the sender also hear the sfx?
+	// TODO : group clips by voice so each player keeps a consistent voice?
 	internal string PlaySfx()
 	{
 		if (m_ghostSfx == null || m_ghostSfx.Length == 0 || m_audioSource == null)
@@ -51,7 +51,7 @@ internal class PlayerGhostSfxPlayer
 
 		// TODO: set volume according to the amplitude of the voice input?
 		AudioClip nextAudioClip = GetNextAudioClip();
-		Utility.PlayAudioClipLocalOnly(m_audioSource, nextAudioClip, RANDOMIZE_PITCH_RANGE, RANDOMIZE_VOLUME_RANGE);
+		Utility.PlayAudioClipLocalOnly(m_audioSource, nextAudioClip, m_configs.RandomizePitchRange.Value, m_configs.RandomizeVolumeRange.Value);
 		return nextAudioClip.name;
 	}
 
@@ -89,7 +89,7 @@ internal class PlayerGhostSfxPlayer
 			audioClip = m_ghostSfx[Random.Range(0, m_ghostSfx.Length)];
 		}
 
-		Utility.PlayAudioClipLocalOnly(m_audioSource, audioClip, RANDOMIZE_PITCH_RANGE, RANDOMIZE_VOLUME_RANGE);
+		Utility.PlayAudioClipLocalOnly(m_audioSource, audioClip, m_configs.RandomizePitchRange.Value, m_configs.RandomizeVolumeRange.Value);
 	}
 
 	private bool TryGetAudioClipByName(string clipName, out AudioClip audioClip)

@@ -7,6 +7,8 @@ using UnityEngine;
 
 namespace DobieWan;
 
+using config;
+
 [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
 [BepInDependency("LethalNetworkAPI")]
 public class Plugin : BaseUnityPlugin
@@ -15,8 +17,10 @@ public class Plugin : BaseUnityPlugin
 	internal static ManualLogSource Log => Instance.Logger;
 
 	internal AssetBundle AssetBundle { get; private set; }
+	internal EventConfigs EventConfigs { get; } = new EventConfigs();
+	internal SfxPlayerConfigs SfxPlayerConfigs { get; } = new SfxPlayerConfigs();
 
-	private readonly Harmony _harmony = new Harmony(PluginInfo.PLUGIN_GUID);
+	private readonly Harmony m_harmony = new Harmony(PluginInfo.PLUGIN_GUID);
 
 	public Plugin()
 	{
@@ -26,19 +30,14 @@ public class Plugin : BaseUnityPlugin
 	private void Awake()
 	{
 		Log.LogInfo($"LCGhostMod is awake!");
-		Log.LogInfo($"Applying patches...");
-		ApplyPluginPatch();
-		Log.LogInfo($"Patches applied");
-
+		InitConfigs();
 		TryLoadAssetBundle();
+		ApplyPluginPatch();
 	}
 
-	/// <summary>
-	/// Applies the patch to the game.
-	/// </summary>
 	private void ApplyPluginPatch()
 	{
-		_harmony.PatchAll(typeof(RoundManagerPatch));
+		m_harmony.PatchAll(typeof(RoundManagerPatch));
 	}
 
 	private void TryLoadAssetBundle()
@@ -58,5 +57,11 @@ public class Plugin : BaseUnityPlugin
 		}
 
 		Log.LogInfo("LCGhostMod bundle loaded!");
+	}
+
+	private void InitConfigs()
+	{
+		((IConfigs)EventConfigs).Initialize(Config);
+		((IConfigs)SfxPlayerConfigs).Initialize(Config);
 	}
 }
