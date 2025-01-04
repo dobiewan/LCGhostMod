@@ -1,6 +1,6 @@
 {
     "name": "SpookyCompany",
-    "version_number": "1.0.0",
+    "version_number": "1.1.0",
     "website_url": "https://github.com/dobiewan/LCGhostMod",
     "description": "Haunt your crewmates when you die. If you speak loudly enough while spectating, the person you are watching will hear a ghost noise.",
     "dependencies": [
