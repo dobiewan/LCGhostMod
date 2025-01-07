@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -16,20 +15,6 @@ internal static class Utility
 			list[i] = list[r];
 			list[r] = tmp;
 		}
-	}
-
-	// Linq is inefficient and I will never use it
-	internal static bool Contains<T>(this IList<T> list, T value) where T : IEquatable<T>
-	{
-		for (int i = 0; i < list.Count; i++)
-		{
-			if (list[i].Equals(value))
-			{
-				return true;
-			}
-		}
-
-		return false;
 	}
 
 	internal static void PlayAudioClipLocalOnly(

@@ -1,4 +1,4 @@
-﻿namespace DobieWan.config;
+﻿namespace DobieWan;
 
 using BepInEx.Configuration;
 

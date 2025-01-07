@@ -10,17 +10,17 @@ internal class GhostManager : MonoBehaviour
 	private LethalClientMessage<HauntVictimEventData> m_hauntVictimEvent = null;
 	private LethalClientMessage<VictimHauntedEventData> m_victimHauntedEvent = null;
 
-	private PlayerGhostEventDetector m_ghostEventDetector = null;
-	private PlayerGhostSfxPlayer m_ghostSfxPlayer = null; // Ideally ghost sfx player subs to this class than the inverse but who cares
+	private GhostEventDetector m_ghostEventDetector = null;
+	private GhostSfxPlayer m_ghostSfxPlayer = null; // Ideally ghost sfx player subs to this class than the inverse but who cares
 
 	private void Start()
 	{
-		m_ghostEventDetector = new PlayerGhostEventDetector(TriggerHauntVictimEvent);
-		m_ghostSfxPlayer = new PlayerGhostSfxPlayer();
+		m_ghostEventDetector = new GhostEventDetector(TriggerHauntVictimEvent);
+		m_ghostSfxPlayer = new GhostSfxPlayer();
 
 		m_hauntVictimEvent = new LethalClientMessage<HauntVictimEventData>("HauntVictim", onReceivedFromClient: ReceiveHauntVictimEvent);
 		m_victimHauntedEvent = new LethalClientMessage<VictimHauntedEventData>("VictimHaunted", onReceivedFromClient: ReceiveVictimHauntedEvent);
-
+		
 		Plugin.Log.LogInfo("GhostManager initialized!");
 	}
 
@@ -45,7 +45,7 @@ internal class GhostManager : MonoBehaviour
 
 		if (localPlayerController.actualClientId == data.SpectatedUserId)
 		{
-			string clipName = m_ghostSfxPlayer.PlaySfx();
+			string clipName = m_ghostSfxPlayer.PlayHauntedSfx();
 			Plugin.Log.LogInfo("Haunt victim: Playing clip " + clipName);
 			TriggerVictimHauntedEvent(clipName);
 		}
@@ -62,10 +62,10 @@ internal class GhostManager : MonoBehaviour
 	private void ReceiveVictimHauntedEvent(VictimHauntedEventData data, ulong fromUser)
 	{
 		PlayerControllerB localPlayerController = StartOfRound.Instance.localPlayerController;
-		Plugin.Log.LogInfo($"Victim haunted received from user {fromUser}. The spectated user is {localPlayerController.actualClientId}");
-
 		if (localPlayerController.spectatedPlayerScript == null)
 			return;
+		
+		Plugin.Log.LogInfo($"Victim haunted received from user {fromUser}. The spectated user is {localPlayerController.spectatedPlayerScript.actualClientId}");
 		
 		ulong specatedUserId = localPlayerController.spectatedPlayerScript.actualClientId;
 		if (specatedUserId == fromUser)
