@@ -5,9 +5,35 @@ using UnityEngine;
 
 internal class PlayerGhostSfxPlayer
 {
+	private AudioSource AudioSource
+	{
+		get
+		{
+			if (m_audioSource == null)
+			{
+				// Try find audio source
+				GameObject sfxParent = GameObject.Find("Systems/Audios/SFX");
+				if (sfxParent == null)
+				{
+					Plugin.Log.LogError("Failed to find SFX object");
+					return null;
+				}
+
+				if (!sfxParent.TryGetComponent(out m_audioSource))
+				{
+					Plugin.Log.LogError("Failed to find SFX audio source");
+					return null;
+				}
+			}
+
+			return m_audioSource;
+		}
+	}
+
 	private readonly SfxPlayerConfigs m_configs = null;
-	private readonly AudioSource m_audioSource = null;
 	private readonly AudioClip[] m_ghostSfx = null;
+	
+	private AudioSource m_audioSource = null;
 	
 	private int m_ghostSfxIndex = 0;
 
@@ -24,34 +50,21 @@ internal class PlayerGhostSfxPlayer
 		m_ghostSfx.Shuffle();
 		Plugin.Log.LogInfo($"Loaded {m_ghostSfx?.Length ?? 0} audio clips");
 
-		// Try find audio source
-		GameObject sfxParent = GameObject.Find("Systems/Audios/SFX");
-		if (sfxParent == null)
-		{
-			Plugin.Log.LogError("Failed to find SFX object");
-			return;
-		}
-
-		if (!sfxParent.TryGetComponent(out m_audioSource))
-		{
-			Plugin.Log.LogError("Failed to find SFX audio source");
-			return;
-		}
-
 		Plugin.Log.LogInfo("PlayerGhostSfxPlayer successfully initialized!");
 	}
   
+#region Victim
 	// TODO : group clips by voice so each player keeps a consistent voice?
-	internal string PlaySfx()
+	internal string PlayHauntedSfx()
 	{
-		if (m_ghostSfx == null || m_ghostSfx.Length == 0 || m_audioSource == null)
+		if (m_ghostSfx == null || m_ghostSfx.Length == 0 || AudioSource == null)
 			return null;
-
-		Plugin.Log.LogInfo("ooOOOOOOOoooooOOOoo");
 
 		// TODO: set volume according to the amplitude of the voice input?
 		AudioClip nextAudioClip = GetNextAudioClip();
-		Utility.PlayAudioClipLocalOnly(m_audioSource, nextAudioClip, m_configs.RandomizePitchRange.Value, m_configs.RandomizeVolumeRange.Value);
+		Utility.PlayAudioClipLocalOnly(AudioSource, nextAudioClip, m_configs.RandomizePitchRange.Value, m_configs.RandomizeVolumeRange.Value);
+		Plugin.Log.LogInfo("ooOOOOOOOoooooOOOoo");
+		
 		return nextAudioClip.name;
 	}
 
@@ -80,7 +93,9 @@ internal class PlayerGhostSfxPlayer
 			m_ghostSfx[^1] = firstClip;
 		}
 	}
+#endregion
 
+#region Spectator
 	internal void PlaySpectatorSfx(string clipName)
 	{
 		if (!TryGetAudioClipByName(clipName, out AudioClip audioClip))
@@ -89,7 +104,8 @@ internal class PlayerGhostSfxPlayer
 			audioClip = m_ghostSfx[Random.Range(0, m_ghostSfx.Length)];
 		}
 
-		Utility.PlayAudioClipLocalOnly(m_audioSource, audioClip, m_configs.RandomizePitchRange.Value, m_configs.RandomizeVolumeRange.Value);
+		Utility.PlayAudioClipLocalOnly(AudioSource, audioClip, m_configs.RandomizePitchRange.Value, m_configs.RandomizeVolumeRange.Value);
+		Plugin.Log.LogInfo("ooOOOOOOOoooooOOOoo");
 	}
 
 	private bool TryGetAudioClipByName(string clipName, out AudioClip audioClip)
@@ -107,4 +123,5 @@ internal class PlayerGhostSfxPlayer
 		audioClip = null;
 		return false;
 	}
+#endregion
 }
