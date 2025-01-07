@@ -6,7 +6,7 @@ using GameNetcodeStuff;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-internal class PlayerGhostEventDetector
+internal class GhostEventDetector
 {
 	private readonly EventConfigs m_configs = null;
 	private readonly Action<PlayerControllerB> m_hauntVictimEventAction = null;
@@ -14,7 +14,7 @@ internal class PlayerGhostEventDetector
 	private float m_lastGhostNoiseTime = 0f;
 	private float m_cooldownTime = 0f;
 
-	internal PlayerGhostEventDetector(Action<PlayerControllerB> hauntVictimEventAction)
+	internal GhostEventDetector(Action<PlayerControllerB> hauntVictimEventAction)
 	{
 		m_configs = Plugin.Instance.EventConfigs;
 		m_hauntVictimEventAction = hauntVictimEventAction;
