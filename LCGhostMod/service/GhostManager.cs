@@ -10,12 +10,12 @@ internal class GhostManager : MonoBehaviour
 	private LethalClientMessage<HauntVictimEventData> m_hauntVictimEvent = null;
 	private LethalClientMessage<VictimHauntedEventData> m_victimHauntedEvent = null;
 
-	private PlayerGhostEventDetector m_ghostEventDetector = null;
+	private GhostEventDetector m_ghostEventDetector = null;
 	private GhostSfxPlayer m_ghostSfxPlayer = null; // Ideally ghost sfx player subs to this class than the inverse but who cares
 
 	private void Start()
 	{
-		m_ghostEventDetector = new PlayerGhostEventDetector(TriggerHauntVictimEvent);
+		m_ghostEventDetector = new GhostEventDetector(TriggerHauntVictimEvent);
 		m_ghostSfxPlayer = new GhostSfxPlayer();
 
 		m_hauntVictimEvent = new LethalClientMessage<HauntVictimEventData>("HauntVictim", onReceivedFromClient: ReceiveHauntVictimEvent);
