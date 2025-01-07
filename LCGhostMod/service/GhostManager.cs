@@ -62,10 +62,10 @@ internal class GhostManager : MonoBehaviour
 	private void ReceiveVictimHauntedEvent(VictimHauntedEventData data, ulong fromUser)
 	{
 		PlayerControllerB localPlayerController = StartOfRound.Instance.localPlayerController;
-		Plugin.Log.LogInfo($"Victim haunted received from user {fromUser}. The spectated user is {localPlayerController.spectatedPlayerScript.actualClientId}");
-
 		if (localPlayerController.spectatedPlayerScript == null)
 			return;
+		
+		Plugin.Log.LogInfo($"Victim haunted received from user {fromUser}. The spectated user is {localPlayerController.spectatedPlayerScript.actualClientId}");
 		
 		ulong specatedUserId = localPlayerController.spectatedPlayerScript.actualClientId;
 		if (specatedUserId == fromUser)
