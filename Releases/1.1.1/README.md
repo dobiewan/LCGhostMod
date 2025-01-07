@@ -1,6 +1,8 @@
 # Spooky Company
 Haunt your crewmates when you die. If you speak loudly enough while spectating, the person you are watching will hear a spooky ghost noise, and so will anyone else spectating.
 
+Note that for the mod to work, both the haunter (spectator) and hauntee (person being spectated) must have the mod installed.
+
 ## Configs
 
 The following values are configurable in Thunderstore / the BepInEx config file:
