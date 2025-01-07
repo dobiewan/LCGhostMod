@@ -20,7 +20,7 @@ internal class GhostManager : MonoBehaviour
 
 		m_hauntVictimEvent = new LethalClientMessage<HauntVictimEventData>("HauntVictim", onReceivedFromClient: ReceiveHauntVictimEvent);
 		m_victimHauntedEvent = new LethalClientMessage<VictimHauntedEventData>("VictimHaunted", onReceivedFromClient: ReceiveVictimHauntedEvent);
-
+		
 		Plugin.Log.LogInfo("GhostManager initialized!");
 	}
 
@@ -45,7 +45,7 @@ internal class GhostManager : MonoBehaviour
 
 		if (localPlayerController.actualClientId == data.SpectatedUserId)
 		{
-			string clipName = m_ghostSfxPlayer.PlaySfx();
+			string clipName = m_ghostSfxPlayer.PlayHauntedSfx();
 			Plugin.Log.LogInfo("Haunt victim: Playing clip " + clipName);
 			TriggerVictimHauntedEvent(clipName);
 		}
@@ -62,7 +62,7 @@ internal class GhostManager : MonoBehaviour
 	private void ReceiveVictimHauntedEvent(VictimHauntedEventData data, ulong fromUser)
 	{
 		PlayerControllerB localPlayerController = StartOfRound.Instance.localPlayerController;
-		Plugin.Log.LogInfo($"Victim haunted received from user {fromUser}. The spectated user is {localPlayerController.actualClientId}");
+		Plugin.Log.LogInfo($"Victim haunted received from user {fromUser}. The spectated user is {localPlayerController.spectatedPlayerScript.actualClientId}");
 
 		if (localPlayerController.spectatedPlayerScript == null)
 			return;
