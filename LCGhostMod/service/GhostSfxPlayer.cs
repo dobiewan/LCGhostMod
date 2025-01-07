@@ -48,8 +48,6 @@ internal class GhostSfxPlayer
 		m_ghostSfx = bundle.LoadAllAssets<AudioClip>();
 		m_ghostSfx.Shuffle();
 		Plugin.Log.LogInfo($"Loaded {m_ghostSfx?.Length ?? 0} audio clips");
-
-		Plugin.Log.LogInfo("PlayerGhostSfxPlayer successfully initialized!");
 	}
   
 #region Victim
