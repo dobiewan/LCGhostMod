@@ -3,7 +3,7 @@ namespace DobieWan;
 using config;
 using UnityEngine;
 
-internal class PlayerGhostSfxPlayer
+internal class GhostSfxPlayer
 {
 	private AudioSource AudioSource
 	{
@@ -37,7 +37,7 @@ internal class PlayerGhostSfxPlayer
 	
 	private int m_ghostSfxIndex = 0;
 
-	internal PlayerGhostSfxPlayer()
+	internal GhostSfxPlayer()
 	{
 		m_configs = Plugin.Instance.SfxPlayerConfigs;
 		
