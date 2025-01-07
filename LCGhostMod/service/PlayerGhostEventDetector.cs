@@ -1,7 +1,6 @@
 namespace DobieWan;
 
 using System;
-using config;
 using Dissonance;
 using GameNetcodeStuff;
 using UnityEngine;

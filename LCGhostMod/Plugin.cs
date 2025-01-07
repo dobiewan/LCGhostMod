@@ -7,8 +7,6 @@ using UnityEngine;
 
 namespace DobieWan;
 
-using config;
-
 [BepInPlugin(PluginInfo.PLUGIN_GUID, PluginInfo.PLUGIN_NAME, PluginInfo.PLUGIN_VERSION)]
 [BepInDependency("LethalNetworkAPI")]
 public class Plugin : BaseUnityPlugin

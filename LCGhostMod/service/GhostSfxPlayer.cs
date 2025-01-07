@@ -1,6 +1,5 @@
 namespace DobieWan;
 
-using config;
 using UnityEngine;
 
 internal class GhostSfxPlayer
