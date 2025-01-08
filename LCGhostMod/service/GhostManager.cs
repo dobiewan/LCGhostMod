@@ -38,7 +38,7 @@ internal class GhostManager : MonoBehaviour
 		m_hauntVictimEvent.SendAllClients(data);
 	}
 
-	private void ReceiveHauntVictimEvent(HauntVictimEventData data, ulong fromUser)
+	private void ReceiveHauntVictimEvent(HauntVictimEventData data, ulong uselessParam)
 	{
 		PlayerControllerB localPlayerController = StartOfRound.Instance.localPlayerController;
 		Plugin.Log.LogInfo($"Haunt victim received for user {data.SpectatedUserId}. This user is {localPlayerController.actualClientId}");
@@ -55,20 +55,20 @@ internal class GhostManager : MonoBehaviour
 	{
 		Plugin.Log.LogInfo($"Triggered victim haunted event with clip {audioClipName}");
 
-		VictimHauntedEventData data = new VictimHauntedEventData(audioClipName);
+		VictimHauntedEventData data = new VictimHauntedEventData(audioClipName, StartOfRound.Instance.localPlayerController.actualClientId);
 		m_victimHauntedEvent.SendAllClients(data);
 	}
 
-	private void ReceiveVictimHauntedEvent(VictimHauntedEventData data, ulong fromUser)
+	private void ReceiveVictimHauntedEvent(VictimHauntedEventData data, ulong uselessParam)
 	{
 		PlayerControllerB localPlayerController = StartOfRound.Instance.localPlayerController;
 		if (localPlayerController.spectatedPlayerScript == null)
 			return;
 		
-		Plugin.Log.LogInfo($"Victim haunted received from user {fromUser}. The spectated user is {localPlayerController.spectatedPlayerScript.actualClientId}");
+		Plugin.Log.LogInfo($"Victim haunted received from user {data.FromUserId}. The spectated user is {localPlayerController.spectatedPlayerScript.actualClientId}");
 		
 		ulong specatedUserId = localPlayerController.spectatedPlayerScript.actualClientId;
-		if (specatedUserId == fromUser)
+		if (specatedUserId == data.FromUserId)
 		{
 			Plugin.Log.LogInfo("Victim haunted: Playing clip: " + data.ClipName);
 			m_ghostSfxPlayer.PlaySpectatorSfx(data.ClipName);
