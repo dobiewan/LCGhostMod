@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.2] (2025-01-08)
+
+
+### Bug Fixes
+
+* Fix an issue that meant only the host could hear their own ghost noises while spectating.
+
+
 ## [1.1.1] (2025-01-07)
 
 
